@@ -4,6 +4,12 @@ Use docker and docker-compose, no other way is supported
 
 ## Getting Started
 
+## Use the SQLite db via a webpage
+
+Load the index.html file in a web browser 🎉
+
+## Building the SQLite db
+
 ### Start a sqlite session
 
 ``` bash
