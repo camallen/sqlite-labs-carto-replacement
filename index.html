@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test of the sqlite db in JS web page!</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.4.0/dist/sql-wasm.js"></script>
+  <script src="loadSQLiteDB.js"></script>
+  <script src="sqlCmdInteractions.js"></script>
+</head>
+
+<body>
+  <div>
+    <p><strong>Create your own custom sql to run against the loaded db 🎉</strong>
+    <div>
+      <button onclick='resetSqlCmd()'>Reset the sql cmd to the default</button>
+    </div>
+    <div>
+      <textarea id='sqlCmdToRun' rows="10" cols="50">
+        SELECT count(*) FROM subjects;
+      </textarea>
+      <p>
+        Some example queries:
+        <ul>
+          <li>List all tables in the db
+            <ul>
+              <li>SELECT
+              name
+              FROM
+              sqlite_master
+              WHERE
+              type ='table' AND
+              name NOT LIKE 'sqlite_%';</li>
+            </ul>
+          </li>
+          <li>Show the schema for the subjects table
+            <ul>
+              <li>PRAGMA table_info(subjects);</li>
+            </ul>
+          </li>
+          <li>Show the subject_id field from subjects
+            <ul>
+              <li>SELECT subject_id FROM subjects;</li>
+            </ul>
+          </li>
+          <li>Select for download
+            <ul>
+              <li>SELECT
+              cam.national_park,
+              cam.veg_type,
+              cam.human_type,
+              cam.dist_humans_m,
+              cam.water_type,
+              cam.dist_water_m,
+              cam.land_use,
+              cam.latitude,
+              cam.longitude,
+              sbjagg.*
+              FROM
+              cameras AS cam
+              INNER JOIN
+              (
+              SELECT
+              sbj.camera, sbj.location, sbj.month, sbj.year, sbj.season, sbj.time_period, sbj.time, sbj.date, sbj.darien_id,
+              agg.data_choice, agg.data_answers_howmany_1, agg.data_answers_howmany_2, agg.data_answers_howmany_3,
+              agg.data_answers_howmany_4, agg.data_answers_howmany_5, agg.data_answers_howmany_6, agg.data_answers_howmany_7,
+              agg.data_answers_howmany_8, agg.data_answers_howmany_9, agg.data_answers_howmany_10, agg.data_answers_howmany_1120,
+              agg.data_answers_howmany_21
+              FROM
+              subjects AS sbj
+              INNER JOIN
+              aggregations AS agg
+              ON
+              sbj.subject_id = agg.subject_id
+              ) AS sbjagg
+              ON
+              cam.id = sbjagg.camera</li>
+            </ul>
+          </li>
+          <li>Select for Assignment
+            <ul>
+              <li>SELECT
+              sbjagg.subject_id,
+              sbjagg.location
+              FROM
+              cameras AS cam
+              INNER JOIN (
+              SELECT
+              sbj.subject_id, sbj.camera, sbj.location, sbj.month, sbj.year, sbj.season, sbj.time_period, sbj.time, sbj.date,
+              sbj.darien_id, agg.data_choice, agg.data_answers_howmany_1, agg.data_answers_howmany_2, agg.data_answers_howmany_3,
+              agg.data_answers_howmany_4, agg.data_answers_howmany_5, agg.data_answers_howmany_6, agg.data_answers_howmany_7,
+              agg.data_answers_howmany_8, agg.data_answers_howmany_9, agg.data_answers_howmany_10, agg.data_answers_howmany_1120,
+              agg.data_answers_howmany_21
+              FROM
+              subjects AS sbj
+              INNER JOIN
+              aggregations AS agg
+              ON
+              sbj.subject_id = agg.subject_id
+              ) AS sbjagg
+              ON
+              cam.id = sbjagg.camera</li>
+            </ul>
+          </li>
+          <li>Select all subjects
+            <ul>
+              <li>SELECT sbj.subject_id, sbj.camera, cam.national_park, cam.longitude, cam.latitude, sbj.date, sbj.month, sbj.year,
+              sbj.season, sbj.time_period, cam.veg_type, cam.land_use, cam.water_type, cam.dist_humans_m, cam.dist_water_m,
+              sbj.location AS image_url FROM subjects AS sbj LEFT JOIN cameras AS cam ON sbj.camera = cam.id
+              </li>
+            </ul>
+          </li>
+
+        </ul>
+
+      </p>
+    </div>
+    <div>
+      <button onclick='runSqlOnLoadedDB()'>Run the SQL on the loaded DB</button>
+    </div>
+  </div>
+  <hr>
+  <div>
+    <p>Executed SQL cmd:</p>
+    <p id='sqlCmdReport' style="font-size: .8em"></p>
+  </div>
+  <div>
+    <p>Results:</p>
+    <p id='sqlResults' style="font-size: .8em"></p>
+  </div>
+</body>
+
+</html>
+
