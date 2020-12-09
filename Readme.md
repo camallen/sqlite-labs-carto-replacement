@@ -8,6 +8,8 @@ Use docker and docker-compose, no other way is supported
 
 Load the [index.html](./index.html) file in a web browser 🎉
 
+The JS code relies heavily on the https://github.com/sql-js/sql.js library.
+
 ## Building the SQLite db
 
 ### Start a sqlite session
