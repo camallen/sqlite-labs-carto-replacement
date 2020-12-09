@@ -6,7 +6,7 @@ Use docker and docker-compose, no other way is supported
 
 ## Use the SQLite db via a webpage
 
-Load the index.html file in a web browser 🎉
+Load the [index.html](./index.html) file in a web browser 🎉
 
 ## Building the SQLite db
 
